@@ -44,9 +44,14 @@
         const urlParams = new URLSearchParams(queryString);
         const idToken = urlParams.get('id_token')
 
+        if(null == idToken) {
+          console.log('no id_token. identify!');
+          return;
+        }
+
         console.log('enter with Id_token=', idToken);
 
-        if ('hba'.toUpperCase() === idToken.toUpperCase) {
+        if ('hba'.toUpperCase() === idToken.toUpperCase()) {
           const docId = urlParams.get('docId')
           console.log('signed doc_id=', docId);
           
