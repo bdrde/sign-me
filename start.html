@@ -38,19 +38,45 @@
   <script src="./sign-me _ D-Trust GmbH_files/core.plugins.js"></script>
 
   <script>
-    function sign() {
-        setInterval(() => done(), 2000);
+    function enter() {
+
+        const queryString = window.location.search;
+        const urlParams = new URLSearchParams(queryString);
+        const idToken = urlParams.get('id_token')
+
+        console.log('enter with Id_token=', idToken);
+
+        if ('hba'.toUpperCase() === idToken.toUpperCase) {
+          const docId = urlParams.get('docId')
+          console.log('signed doc_id=', docId);
+          
+          if (null == docId) {
+            console.log('error: no doc_id passed');
+            return;
+          }
+
+          setInterval(() => done(docId), 2000);
+          //done(docId);
+        }
     }
 
-    function done() {
+    function sign() {
+        const queryString = window.location.search;
+        const urlParams = new URLSearchParams(queryString);
+        const docId = urlParams.get('doc_id')
+
+        window.location.href = 'https://authr.herokuapp.com/authenticate?callback=https://bdrde.github.io/sign-me/start.html?doc_id=' + docId;
+    }
+
+    function done(docId) {
         //window.opener.postMessage("signed", "http://localhost:5500");
-        window.opener.postMessage("signed", "https://bdrde.github.io");
+        window.opener.postMessage(docId, "https://bdrde.github.io");
     }
 </script>
 
 </head>
 
-<body ontouchstart="" class="pb-4 pb-sm-0  ">
+<body ontouchstart="" class="pb-4 pb-sm-0  " onload="enter();">
   <script src="./sign-me _ D-Trust GmbH_files/start.js"></script>
   <section id="start-html" class="container-fluid">
     <div class="row">
