@@ -40,44 +40,46 @@
   <script>
     function enter() {
 
-        const queryString = window.location.search;
-        const urlParams = new URLSearchParams(queryString);
-        const idToken = urlParams.get('id_token')
+      const queryString = window.location.search;
+      const urlParams = new URLSearchParams(queryString);
+      const idToken = urlParams.get('id_token')
 
-        if(null == idToken) {
-          console.log('no id_token. identify!');
+      if (null == idToken) {
+        console.log('no id_token. identify!');
+        return;
+      }
+
+      console.log('enter with Id_token=', idToken);
+
+      if ('hba'.toUpperCase() === idToken.toUpperCase()) {
+        const docId = urlParams.get('doc_id')
+        console.log('signed doc_id=', docId);
+
+        if (null == docId) {
+          console.log('error: no doc_id passed');
           return;
         }
 
-        console.log('enter with Id_token=', idToken);
-
-        if ('hba'.toUpperCase() === idToken.toUpperCase()) {
-          const docId = urlParams.get('docId')
-          console.log('signed doc_id=', docId);
-          
-          if (null == docId) {
-            console.log('error: no doc_id passed');
-            return;
-          }
-
-          setInterval(() => done(docId), 2000);
-          //done(docId);
-        }
+        setInterval(() => done(docId), 2000);
+        //done(docId);
+      }
     }
 
     function sign() {
-        const queryString = window.location.search;
-        const urlParams = new URLSearchParams(queryString);
-        const docId = urlParams.get('doc_id')
+      const queryString = window.location.search;
+      const urlParams = new URLSearchParams(queryString);
+      const docId = urlParams.get('doc_id')
 
-        window.location.href = 'https://authr.herokuapp.com/authenticate?callback=https://bdrde.github.io/sign-me/start.html?doc_id=' + docId;
+      window.location.href = 'https://authr.herokuapp.com/authenticate?callback=https://bdrde.github.io/sign-me/start.html?doc_id=' + docId;
     }
 
     function done(docId) {
+      if (null != window.opener) {
         //window.opener.postMessage("signed", "http://localhost:5500");
         window.opener.postMessage(docId, "https://bdrde.github.io");
+      }
     }
-</script>
+  </script>
 
 </head>
 
@@ -138,8 +140,8 @@
             <div class="card mb-4">
               <div class="card-body">
                 <h4 class="card-title">Have a Wallet?</h4>
-                <a id="btn_login" href="#" onclick="sign();"
-                  class="mt-2 col-12 offset-sm-6 col-sm-6 btn bdr-green" target="_self">Identify with Wallet</a>
+                <a id="btn_login" href="#" onclick="sign();" class="mt-2 col-12 offset-sm-6 col-sm-6 btn bdr-green"
+                  target="_self">Identify with Wallet</a>
               </div>
             </div>
             <div class="card mb-4">
